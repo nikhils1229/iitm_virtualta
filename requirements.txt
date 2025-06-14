@@ -3,4 +3,4 @@ flask-cors==4.0.0
 openai==1.86.0
 chromadb==0.4.24
 numpy==1.26.4
-Pillow
+gunicorn
