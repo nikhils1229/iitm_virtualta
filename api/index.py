@@ -1,4 +1,3 @@
-
 import os
 import json
 import base64
@@ -138,20 +137,25 @@ def answer_question():
         # Search for relevant content
         search_results = search_knowledge_base(question, knowledge_base)
 
-        # Handle image if provided
+        # Graceful image handling
         image_analysis = None
         if image_data:
             try:
+                if image_data.startswith("file://"):
+                    raise ValueError("Image file reference is invalid or not found. Skipping image analysis.")
+
                 if image_data.startswith('data:image'):
                     image_data = image_data.split(',')[1]
+
                 image_analysis = analyze_image(image_data, question)
             except Exception as e:
-                print(f"Image processing error: {e}")
+                print(f"⚠️ Skipping image analysis: {e}")
+                image_analysis = None
 
         # Generate answer
         answer = generate_answer(question, search_results, image_analysis)
 
-        # Format response
+        # Format links
         links = []
         for result in search_results:
             if result.get('url') and result.get('text'):
